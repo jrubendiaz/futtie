@@ -1,3 +1,16 @@
+var pr = document.createElement('div');
+pr.style.backgroundColor = 'white'
+pr.style.color = 'black'
+pr.style.padding = '12px'
+pr.style.fontSize = '10px'
+pr.style.position = 'fixed'
+pr.style.top = '0'
+pr.style.left = '150px'
+pr.style.height = '400px'
+pr.style.width = '320px'
+pr.style.overflowY = 'scroll'
+pr.style.opacity = '0.8'
+
 /*
 *
   *  NEW SCRIPT FROM HERE
@@ -17,7 +30,42 @@ const CHEM_STYLES = {
 }
 
 const ELEMENT_SELECTOR = {
-    DIALOG: '.ea-dialog-view'
+    DIALOG: '.ea-dialog-view',
+    PLAYER: {
+        SELECTED_ITEM_LIST: {
+            MAIN: '.listFUTItem.has-auction-data.selected',
+            IMAGE: '.player.item.small',
+            PRIZE: '.auctionValue .value',
+            NAME: '.name'
+        }
+
+    }
+}
+
+const getPlayerInfo = (element) => {
+    const prizes = element.querySelectorAll(ELEMENT_SELECTOR.PLAYER.SELECTED_ITEM_LIST.PRIZE)
+    const buyNowPrize = prizes[prizes.length - 1]
+    const name = element.querySelector(ELEMENT_SELECTOR.PLAYER.SELECTED_ITEM_LIST.NAME)
+
+    return {buyNowPrize, name}
+}
+
+const getPlayerInfoElement = ({buyNowPrize, name, image}) => {
+    const newElement = document.createElement('div');
+    newElement.style.display = 'flex';
+    newElement.style.justifyContent = 'center'
+    newElement.style.alignItems = 'center'
+    newElement.style.fontSize = '18px'
+    const leftContainer = document.createElement('div')
+    leftContainer.appendChild(image)
+    newElement.appendChild(leftContainer)
+    const rightContainer = document.createElement('div')
+    rightContainer.style.flexGrow = 1
+    rightContainer.appendChild(name)
+    rightContainer.appendChild(buyNowPrize)
+    newElement.appendChild(rightContainer)
+
+    return newElement
 }
 
 let buyAttempts = 0
@@ -205,6 +253,9 @@ var getResults = () => {
                     dispatchClick(clickableItem)
                     clearInterval(intervalAtLeastOneItem)
                     resultsAlready = true
+                    const selectedPlayerInfo = getPlayerInfo(document.querySelector(ELEMENT_SELECTOR.PLAYER.SELECTED_ITEM_LIST.MAIN))
+                    const selectedPlayerInfoElement = getPlayerInfoElement(selectedPlayerInfo)
+                    pr.appendChild(selectedPlayerInfoElement)
                     resolve({response: 'CLICKED_RESULT'})
                 } catch(e) {
                     brakeIt()
@@ -265,7 +316,6 @@ var search = async() => {
 
     const searchButton = () => document.querySelector('.btn-standard.call-to-action')
     const navigateBackButton = () => document.querySelector('.ut-navigation-button-control')
-    pr.innerHTML = '';
     intervals.forEach(intervalID => {
         clearInterval(intervalID)
     })
@@ -411,19 +461,6 @@ stopButton.onclick = () => {
     setMessage('Stopping...')
 }
 
-var pr = document.createElement('div');
-pr.style.backgroundColor = 'white'
-pr.style.color = 'black'
-pr.style.padding = '12px'
-pr.style.fontSize = '10px'
-pr.style.position = 'fixed'
-pr.style.top = '0'
-pr.style.left = '150px'
-pr.style.height = '400px'
-pr.style.width = '320px'
-pr.style.overflowY = 'scroll'
-pr.style.opacity = '0.8'
-
 
 const newElement = (text) => {
     const item = document.createElement('div');
@@ -441,6 +478,7 @@ const newElement = (text) => {
 }
 
 const setMessage = (text) => {
+    return
     pr.appendChild(newElement(text))
 }
 
