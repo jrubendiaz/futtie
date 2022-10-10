@@ -17,41 +17,41 @@ const CHEM_STYLES = {
 }
 
 const ELEMENT_SELECTOR = {
-    DIALOG: ".ea-dialog-view"
+    DIALOG: '.ea-dialog-view'
 }
 
 let buyAttempts = 0
 let boughtPlayers = 0
 
 let intervals = [];
-var clock = document.createElement("div");
-clock.style.backgroundColor = "white"
-clock.style.color = "black"
-clock.style.padding = "12px"
-clock.style.fontSize = "48px"
+var clock = document.createElement('div');
+clock.style.backgroundColor = 'white'
+clock.style.color = 'black'
+clock.style.padding = '12px'
+clock.style.fontSize = '48px'
 clock.style.fontWeight = 'bold'
-clock.style.position = "fixed"
-clock.style.top = "0"
-clock.style.left = "520px"
-clock.style.height = "100px"
-clock.style.width = "80px"
+clock.style.position = 'fixed'
+clock.style.top = '0'
+clock.style.left = '520px'
+clock.style.height = '100px'
+clock.style.width = '80px'
 clock.style.overflowY = 'scroll'
 clock.style.opacity = '0.8'
 clock.style.display = 'flex'
 clock.style.justifyContent = 'center'
 clock.style.alignItems = 'center'
 
-var stats = document.createElement("div");
-stats.style.backgroundColor = "white"
-stats.style.color = "black"
-stats.style.padding = "12px"
-stats.style.fontSize = "16px"
+var stats = document.createElement('div');
+stats.style.backgroundColor = 'white'
+stats.style.color = 'black'
+stats.style.padding = '12px'
+stats.style.fontSize = '16px'
 stats.style.fontWeight = 'bold'
-stats.style.position = "fixed"
-stats.style.top = "120px"
-stats.style.left = "520px"
-stats.style.height = "64px"
-stats.style.width = "auto"
+stats.style.position = 'fixed'
+stats.style.top = '120px'
+stats.style.left = '520px'
+stats.style.height = '64px'
+stats.style.width = 'auto'
 stats.style.opacity = '0.8'
 stats.style.display = 'flex'
 stats.style.justifyContent = 'center'
@@ -72,10 +72,10 @@ const setClock = (miliseconds) => {
 }
 
 const dispatchClick = (node) => {
-    triggerMouseEvent (node, "mouseover");
-    triggerMouseEvent (node, "mousedown");
-    triggerMouseEvent (node, "mouseup");
-    triggerMouseEvent (node, "click")
+    triggerMouseEvent (node, 'mouseover');
+    triggerMouseEvent (node, 'mousedown');
+    triggerMouseEvent (node, 'mouseup');
+    triggerMouseEvent (node, 'click')
 }
 
 const triggerMouseEvent = async (node, eventType) => {
@@ -229,17 +229,17 @@ var decrease = false
 var running = true
 var request = 0
 var rounds = 0
-var roundClock = document.createElement("div");
-roundClock.style.backgroundColor = "white"
-roundClock.style.color = "black"
-roundClock.style.padding = "12px"
-roundClock.style.fontSize = "48px"
+var roundClock = document.createElement('div');
+roundClock.style.backgroundColor = 'white'
+roundClock.style.color = 'black'
+roundClock.style.padding = '12px'
+roundClock.style.fontSize = '48px'
 roundClock.style.fontWeight = 'bold'
-roundClock.style.position = "fixed"
-roundClock.style.top = "0"
-roundClock.style.left = "620px"
-roundClock.style.height = "100px"
-roundClock.style.width = "80px"
+roundClock.style.position = 'fixed'
+roundClock.style.top = '0'
+roundClock.style.left = '620px'
+roundClock.style.height = '100px'
+roundClock.style.width = '80px'
 roundClock.style.overflowY = 'scroll'
 roundClock.style.opacity = '0.8'
 roundClock.style.display = 'flex'
@@ -293,7 +293,7 @@ var search = async() => {
     if(minBidInput()?.value > MAX_MIN_BID) {
         decrease = true
     } 
-    if(minBidInput()?.value == "") {
+    if(minBidInput()?.value == '') {
         decrease = false
     }
 
@@ -369,29 +369,29 @@ const searchAndBuy = async () => {
     }
 }
 
-var searchButton = document.createElement("button");
+var searchButton = document.createElement('button');
 searchButton.innerHTML = 'START'
-searchButton.style.width = "120px"
-searchButton.style.backgroundColor = "black"
-searchButton.style.color = "white"
-searchButton.style.padding = "12px"
-searchButton.style.position = "fixed"
-searchButton.style.top = "0"
-searchButton.style.right = "0"
+searchButton.style.width = '120px'
+searchButton.style.backgroundColor = 'black'
+searchButton.style.color = 'white'
+searchButton.style.padding = '12px'
+searchButton.style.position = 'fixed'
+searchButton.style.top = '0'
+searchButton.style.right = '0'
 searchButton.onclick = () => {
     running = true
     search()
-    setMessage("Searching...")
+    setMessage('Searching...')
 }
-var stopButton = document.createElement("button");
+var stopButton = document.createElement('button');
 stopButton.innerHTML = 'STOP'
-stopButton.style.width = "120px"
-stopButton.style.backgroundColor = "red"
-stopButton.style.color = "white"
-stopButton.style.padding = "12px"
-stopButton.style.position = "fixed"
-stopButton.style.top = "0"
-stopButton.style.right = "240px"
+stopButton.style.width = '120px'
+stopButton.style.backgroundColor = 'red'
+stopButton.style.color = 'white'
+stopButton.style.padding = '12px'
+stopButton.style.position = 'fixed'
+stopButton.style.top = '0'
+stopButton.style.right = '240px'
 stopButton.onclick = () => {
     running = false
     try {
@@ -406,35 +406,35 @@ stopButton.onclick = () => {
         canDismissNotification = false
         stop = true
     } catch(e) {
-        setMessage("No pude parar los intervals")
+        setMessage('No pude parar los intervals')
     }
-    setMessage("Stopping...")
+    setMessage('Stopping...')
 }
 
-var pr = document.createElement("div");
-pr.style.backgroundColor = "white"
-pr.style.color = "black"
-pr.style.padding = "12px"
-pr.style.fontSize = "10px"
-pr.style.position = "fixed"
-pr.style.top = "0"
-pr.style.left = "150px"
-pr.style.height = "400px"
-pr.style.width = "320px"
+var pr = document.createElement('div');
+pr.style.backgroundColor = 'white'
+pr.style.color = 'black'
+pr.style.padding = '12px'
+pr.style.fontSize = '10px'
+pr.style.position = 'fixed'
+pr.style.top = '0'
+pr.style.left = '150px'
+pr.style.height = '400px'
+pr.style.width = '320px'
 pr.style.overflowY = 'scroll'
 pr.style.opacity = '0.8'
 
 
 const newElement = (text) => {
-    const item = document.createElement("div");
-    item.style.backgroundColor = "#f3f3f3"
-    item.style.color = "black"
-    item.style.padding = "12px"
-    item.style.fontSize = "10px"
-    item.style.height = "auto"
+    const item = document.createElement('div');
+    item.style.backgroundColor = '#f3f3f3'
+    item.style.color = 'black'
+    item.style.padding = '12px'
+    item.style.fontSize = '10px'
+    item.style.height = 'auto'
     item.style.overflowY = 'scroll'
     item.style.borderColor = '#333'
-    item.style.borderWidth = "1px"
+    item.style.borderWidth = '1px'
     item.innerHTML = text
 
     return item
@@ -462,22 +462,22 @@ const buyNowPlus = () => minusPlusBtns(7)
 document.addEventListener('keydown', (e) => {
     const {code} = e;
     switch (code) {
-        case "Space":
+        case 'Space':
             searchAndBuy()
             break;
-        case "ArrowLeft":
+        case 'ArrowLeft':
             dispatchClick(buyNowMinPlus())
             break;
-        case "ArrowRight":
+        case 'ArrowRight':
             dispatchClick(buyNowMinMinus())
             break;
-        case "ArrowUp":
+        case 'ArrowUp':
             dispatchClick(buyNowPlus())
             break;
-        case "ArrowDown":
+        case 'ArrowDown':
             dispatchClick(buyNowMinus())
             break;
-        case "ShiftRight":
+        case 'ShiftRight':
             const navigateBackButton = () => document.querySelector('.ut-navigation-button-control')
             dispatchClick(navigateBackButton())
             break;
