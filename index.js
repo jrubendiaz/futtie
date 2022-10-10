@@ -17,59 +17,29 @@ const CHEM_STYLES = {
 }
 
 const ELEMENT_SELECTOR = {
+    DIALOG: '.ea-dialog-view',
+    PLAYER_DETAIL: {
+      BUTTON_GROUP: '.DetailPanel>.ut-button-group'
+    },
+    SEARCH_BUTTON: '.btn-standard.call-to-action',
+    BACK_BUTTON: '.ut-navigation-button-control',
     DIALOG: '.ea-dialog-view'
-}
+  }
 
 let buyAttempts = 0
 let boughtPlayers = 0
 
 let intervals = [];
-var clock = document.createElement('div');
-clock.style.backgroundColor = 'white'
-clock.style.color = 'black'
-clock.style.padding = '12px'
-clock.style.fontSize = '48px'
-clock.style.fontWeight = 'bold'
-clock.style.position = 'fixed'
-clock.style.top = '0'
-clock.style.left = '520px'
-clock.style.height = '100px'
-clock.style.width = '80px'
-clock.style.overflowY = 'scroll'
-clock.style.opacity = '0.8'
-clock.style.display = 'flex'
-clock.style.justifyContent = 'center'
-clock.style.alignItems = 'center'
+let intervalAceptar = null
+let intervalItemClick = null
+let intervalErrorNotification = null
+let imageIntervals = []
 
-var stats = document.createElement('div');
-stats.style.backgroundColor = 'white'
-stats.style.color = 'black'
-stats.style.padding = '12px'
-stats.style.fontSize = '16px'
-stats.style.fontWeight = 'bold'
-stats.style.position = 'fixed'
-stats.style.top = '120px'
-stats.style.left = '520px'
-stats.style.height = '64px'
-stats.style.width = 'auto'
-stats.style.opacity = '0.8'
-stats.style.display = 'flex'
-stats.style.justifyContent = 'center'
-stats.style.alignItems = 'center'
+let canClick = true
+let canAccept = false
+let canDismissNotification = true
 
-
-
-const setClock = (miliseconds) => {
-    let remaining = miliseconds;
-    clock.innerText = Math.round(remaining / 1000)
-    const timer = setInterval(() => {
-        remaining = (remaining - 100) >= 0 ? remaining - 100 : 0
-        clock.innerText = Math.round(remaining / 1000)
-        if(remaining <= 0) {
-            clearInterval(timer)
-        }
-    }, 100)
-}
+let dialog = document.querySelector(ELEMENT_SELECTOR.DIALOG)
 
 const dispatchClick = (node) => {
     triggerMouseEvent (node, 'mouseover');
@@ -93,11 +63,6 @@ function sleep(ms) {
     setClock(ms)
     return new Promise(resolve => setTimeout(resolve, ms))
 }
-
-var intervalAceptar = null
-var intervalItemClick = null
-var intervalErrorNotification = null
-var imageIntervals = []
 const imageReady = () => {
     return new Promise(resolve => {
         imageIntervals = [...imageIntervals, setInterval(() => {
@@ -112,9 +77,9 @@ const imageReady = () => {
 }
 
 const buyIt = () => {
-    let canClick = true
-    let canAccept = false
-    let canDismissNotification = true
+    canClick = true
+    canAccept = false
+    canDismissNotification = true
     buyAttempts++
     stats.innerText = `Comprados ${boughtPlayers} de ${buyAttempts}`
 
@@ -129,7 +94,7 @@ const buyIt = () => {
             setMessage('El artículo no tiene estilo de química')
         } else {
             intervalAceptar = setInterval(async () => {
-                let dialog = document.querySelector('.ea-dialog-view')
+                
                 if(dialog) {
                     let btn = dialog.querySelectorAll('button')[0]
                     if(btn && canAccept) {
@@ -367,6 +332,54 @@ const searchAndBuy = async () => {
     } else if(response === 'NO_RESULTS') {
         // Nothing...
     }
+}
+
+// Extra HTML elements //
+var clock = document.createElement('div');
+clock.style.backgroundColor = 'white'
+clock.style.color = 'black'
+clock.style.padding = '12px'
+clock.style.fontSize = '48px'
+clock.style.fontWeight = 'bold'
+clock.style.position = 'fixed'
+clock.style.top = '0'
+clock.style.left = '520px'
+clock.style.height = '100px'
+clock.style.width = '80px'
+clock.style.overflowY = 'scroll'
+clock.style.opacity = '0.8'
+clock.style.display = 'flex'
+clock.style.justifyContent = 'center'
+clock.style.alignItems = 'center'
+
+var stats = document.createElement('div');
+stats.style.backgroundColor = 'white'
+stats.style.color = 'black'
+stats.style.padding = '12px'
+stats.style.fontSize = '16px'
+stats.style.fontWeight = 'bold'
+stats.style.position = 'fixed'
+stats.style.top = '120px'
+stats.style.left = '520px'
+stats.style.height = '64px'
+stats.style.width = 'auto'
+stats.style.opacity = '0.8'
+stats.style.display = 'flex'
+stats.style.justifyContent = 'center'
+stats.style.alignItems = 'center'
+
+
+
+const setClock = (miliseconds) => {
+    let remaining = miliseconds;
+    clock.innerText = Math.round(remaining / 1000)
+    const timer = setInterval(() => {
+        remaining = (remaining - 100) >= 0 ? remaining - 100 : 0
+        clock.innerText = Math.round(remaining / 1000)
+        if(remaining <= 0) {
+            clearInterval(timer)
+        }
+    }, 100)
 }
 
 var searchButton = document.createElement('button');
