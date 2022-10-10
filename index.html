@@ -14,19 +14,19 @@
         *
         */
         
-        const HOW_MANY_REQUEST_PER_ROUND = 25
-        const HOW_MANY_ROUNDS_PER_CYCLE = 5
-        const MIN_WAIT_PER_ROUND = 15000
-        const MAX_WAIT_PER_ROUND = 30000
-        const MIN_WAIT_PER_CYCLE = 60000
-        const MAX_WAIT_PER_CYCLE = 120000
-        const MAX_MIN_BID = 600
+        var HOW_MANY_REQUEST_PER_ROUND = 25
+        var HOW_MANY_ROUNDS_PER_CYCLE = 5
+        var MIN_WAIT_PER_ROUND = 15000
+        var MAX_WAIT_PER_ROUND = 30000
+        var MIN_WAIT_PER_CYCLE = 60000
+        var MAX_WAIT_PER_CYCLE = 120000
+        var MAX_MIN_BID = 600
         
-        const CHEM_STYLES = {
+        var CHEM_STYLES = {
             NORMAL: '.playStyle.chemstyle250'
         }
         
-        const ELEMENT_SELECTOR = {
+        var ELEMENT_SELECTOR = {
             DIALOG: '.ea-dialog-view'
         }
         
@@ -69,10 +69,10 @@
         
         
         
-        const setClock = (miliseconds) => {
+        var setClock = (miliseconds) => {
             let remaining = miliseconds;
             clock.innerText = Math.round(remaining / 1000)
-            const timer = setInterval(() => {
+            var timer = setInterval(() => {
                 remaining = (remaining - 100) >= 0 ? remaining - 100 : 0
                 clock.innerText = Math.round(remaining / 1000)
                 if(remaining <= 0) {
@@ -81,14 +81,14 @@
             }, 100)
         }
         
-        const dispatchClick = (node) => {
+        var dispatchClick = (node) => {
             triggerMouseEvent (node, 'mouseover');
             triggerMouseEvent (node, 'mousedown');
             triggerMouseEvent (node, 'mouseup');
             triggerMouseEvent (node, 'click')
         }
         
-        const triggerMouseEvent = async (node, eventType) => {
+        var triggerMouseEvent = async (node, eventType) => {
             try {
                 var clickEvent = document.createEvent ('MouseEvents');
                 clickEvent.initEvent (eventType, true, true);
@@ -108,7 +108,7 @@
         var intervalItemClick = null
         var intervalErrorNotification = null
         var imageIntervals = []
-        const imageReady = () => {
+        var imageReady = () => {
             return new Promise(resolve => {
                 imageIntervals = [...imageIntervals, setInterval(() => {
                     if(document.querySelector('.tns-slide-active .large.player.item.ut-item-loaded')) {
@@ -121,7 +121,7 @@
             })
         }
         
-        const buyIt = () => {
+        var buyIt = () => {
             let canClick = true
             let canAccept = false
             let canDismissNotification = true
@@ -129,7 +129,7 @@
             stats.innerText = `Comprados ${boughtPlayers} de ${buyAttempts}`
         
             return new Promise(async (resolve) => {
-                const { item } = await imageReady()
+                var { item } = await imageReady()
                 setMessage('Se cargó la imagen')
                 imageIntervals.forEach(interval => {
                     clearInterval(interval)
@@ -147,7 +147,7 @@
                                 try {
                                     dispatchClick(btn)
                                     await sleep(500)
-                                    const sellButton = document.querySelector('.ut-quick-list-panel-view')
+                                    var sellButton = document.querySelector('.ut-quick-list-panel-view')
                                     // TODO: Have to check the screen until the item is already purchased or it fails
                                     if(sellButton) {
                                         boughtPlayers++
@@ -176,10 +176,10 @@
                     }, 50)
                     intervals = [...intervals, intervalItemClick]
                     intervalErrorNotification = setInterval(async () => {
-                        const notification = document.querySelector('#NotificationLayer');
+                        var notification = document.querySelector('#NotificationLayer');
                         if(notification) {
                             await sleep(300)
-                            const close = notification.querySelector('.icon_close')
+                            var close = notification.querySelector('.icon_close')
                             if(close && canDismissNotification) {
                                 try {
                                     if(intervalErrorNotification) clearInterval(intervalErrorNotification)
@@ -206,11 +206,11 @@
             let noResultsAlready = false
             return new Promise(resolve => {
                 intervalAtLeastOneItem = setInterval(() => {
-                    const results = document.querySelectorAll('.listFUTItem')
+                    var results = document.querySelectorAll('.listFUTItem')
                     if(results && results.length > 0 && !resultsAlready) {
                         resultsAlready = true
-                        const lastItem = results[results.length - 1]
-                        const clickableItem = lastItem.querySelector('.rowContent')
+                        var lastItem = results[results.length - 1]
+                        var clickableItem = lastItem.querySelector('.rowContent')
                         try {
                             dispatchClick(clickableItem)
                             clearInterval(intervalAtLeastOneItem)
@@ -224,7 +224,7 @@
                 intervals = [...intervals, intervalAtLeastOneItem]
         
                 intervalNoResults = setInterval(() => {
-                    const noResults = document.querySelector('.ut-no-results-view')
+                    var noResults = document.querySelector('.ut-no-results-view')
                     if(noResults && !noResultsAlready) {
                         clearInterval(intervalNoResults)
                         noResultsAlready = true
@@ -255,45 +255,45 @@
         roundClock.style.display = 'flex'
         roundClock.style.justifyContent = 'center'
         roundClock.style.alignItems = 'center'
-        const updateRequestsClock = () => {
+        var updateRequestsClock = () => {
             roundClock.innerText = HOW_MANY_REQUEST_PER_ROUND - request
             request ++
         }
         var search = async() => {
-            const minusPlusBtns = (index) => document.querySelectorAll('.btn-standard')[index]
-            const minBidMinus = () => minusPlusBtns(0)
-            const minBidPlus = () => minusPlusBtns(1)
-            const buyNowMinMinus = () => minusPlusBtns(4)
-            const buyNowMinPlus = () => minusPlusBtns(5)
-            const buyNowMinus = () => minusPlusBtns(6)
-            const buyNowPlus = () => minusPlusBtns(7)
+            var minusPlusBtns = (index) => document.querySelectorAll('.btn-standard')[index]
+            var minBidMinus = () => minusPlusBtns(0)
+            var minBidPlus = () => minusPlusBtns(1)
+            var buyNowMinMinus = () => minusPlusBtns(4)
+            var buyNowMinPlus = () => minusPlusBtns(5)
+            var buyNowMinus = () => minusPlusBtns(6)
+            var buyNowPlus = () => minusPlusBtns(7)
         
-            const inputs = (index) => document.querySelectorAll('.ut-number-input-control')[index]
-            const minBidInput = () => inputs(0)
-            const minBuyInput = () => inputs(2)
-            const maxBuyInput = () => inputs(3)
+            var inputs = (index) => document.querySelectorAll('.ut-number-input-control')[index]
+            var minBidInput = () => inputs(0)
+            var minBuyInput = () => inputs(2)
+            var maxBuyInput = () => inputs(3)
         
-            const searchButton = () => document.querySelector('.btn-standard.call-to-action')
-            const navigateBackButton = () => document.querySelector('.ut-navigation-button-control')
+            var searchButton = () => document.querySelector('.btn-standard.call-to-action')
+            var navigateBackButton = () => document.querySelector('.ut-navigation-button-control')
             pr.innerHTML = '';
             intervals.forEach(intervalID => {
                 clearInterval(intervalID)
             })
             intervals = []
-            const getRandomSleep = (max, min) => {
+            var getRandomSleep = (max, min) => {
                 return Math.floor(Math.random() * (max - min + 1) + min)
             }
             if(!running) {
                 return
             }
             if(request > HOW_MANY_REQUEST_PER_ROUND) {
-                const time = getRandomSleep(MAX_WAIT_PER_ROUND, MIN_WAIT_PER_ROUND)
+                var time = getRandomSleep(MAX_WAIT_PER_ROUND, MIN_WAIT_PER_ROUND)
                 await sleep(time);
                 request = 0
                 rounds ++
             }
             // if(rounds >= HOW_MANY_ROUNDS_PER_CYCLE) {
-            //     const howMuchTime = getRandomSleep(MAX_WAIT_PER_CYCLE, MIN_WAIT_PER_CYCLE)
+            //     var howMuchTime = getRandomSleep(MAX_WAIT_PER_CYCLE, MIN_WAIT_PER_CYCLE)
             //     await sleep(howMuchTime)
             //     rounds = 0
             // }
@@ -315,20 +315,20 @@
             dispatchClick(request % 2 === 0 ? buyNowMinus() : buyNowPlus())
             dispatchClick(searchButton())
             await sleep(300)
-            const {response} = await getResults()
+            var {response} = await getResults()
             setMessage('CLICKED_RESULT...')
             if(response === 'CLICKED_RESULT') {
-                const buyResponse = await buyIt()
+                var buyResponse = await buyIt()
                 if(buyResponse.response === 'BUY_OK') {
                     setMessage('Artículo comprado!')
-                    const buttonGroup = document.querySelector('.DetailPanel>.ut-button-group')
-                    const sendToPile = buttonGroup.querySelectorAll('button')[7]
+                    var buttonGroup = document.querySelector('.DetailPanel>.ut-button-group')
+                    var sendToPile = buttonGroup.querySelectorAll('button')[7]
                     dispatchClick(sendToPile)
                     await sleep(200)
                     dispatchClick(navigateBackButton())
                     search()
                 } else if(buyResponse.response === 'BUY_KO') {
-                    const close = document.querySelector('.icon_close')
+                    var close = document.querySelector('.icon_close')
                     if(close) {
                         dispatchClick(close)
                     }
@@ -349,23 +349,23 @@
             }
         }
         
-        const searchAndBuy = async () => {
-            const searchButton = () => document.querySelector('.btn-standard.call-to-action')
+        var searchAndBuy = async () => {
+            var searchButton = () => document.querySelector('.btn-standard.call-to-action')
             dispatchClick(searchButton())
         
-            const {response} = await getResults()
+            var {response} = await getResults()
             if(response === 'CLICKED_RESULT') {
-                const buyResponse = await buyIt()
+                var buyResponse = await buyIt()
                 if(buyResponse.response === 'BUY_OK') {
                     setMessage('Artículo comprado!')
-                    const buttonGroup = document.querySelector('.DetailPanel>.ut-button-group')
-                    const sendToPile = buttonGroup.querySelectorAll('button')[7]
+                    var buttonGroup = document.querySelector('.DetailPanel>.ut-button-group')
+                    var sendToPile = buttonGroup.querySelectorAll('button')[7]
                     dispatchClick(sendToPile)
                     await sleep(200)
                     dispatchClick(navigateBackButton())
                     search()
                 } else if(buyResponse.response === 'BUY_KO') {
-                    const close = document.querySelector('.icon_close')
+                    var close = document.querySelector('.icon_close')
                     if(close) {
                         dispatchClick(close)
                     }
@@ -435,8 +435,8 @@
         pr.style.opacity = '0.8'
         
         
-        const newElement = (text) => {
-            const item = document.createElement('div');
+        var newElement = (text) => {
+            var item = document.createElement('div');
             item.style.backgroundColor = '#f3f3f3'
             item.style.color = 'black'
             item.style.padding = '12px'
@@ -450,7 +450,7 @@
             return item
         }
         
-        const setMessage = (text) => {
+        var setMessage = (text) => {
             pr.appendChild(newElement(text))
         }
         
@@ -461,16 +461,16 @@
         document.body.appendChild(roundClock);
         document.body.appendChild(stats);
         
-        const minusPlusBtns = (index) => document.querySelectorAll('.btn-standard')[index]
-        const minBidMinus = () => minusPlusBtns(0)
-        const minBidPlus = () => minusPlusBtns(1)
-        const buyNowMinMinus = () => minusPlusBtns(4)
-        const buyNowMinPlus = () => minusPlusBtns(5)
-        const buyNowMinus = () => minusPlusBtns(6)
-        const buyNowPlus = () => minusPlusBtns(7)
+        var minusPlusBtns = (index) => document.querySelectorAll('.btn-standard')[index]
+        var minBidMinus = () => minusPlusBtns(0)
+        var minBidPlus = () => minusPlusBtns(1)
+        var buyNowMinMinus = () => minusPlusBtns(4)
+        var buyNowMinPlus = () => minusPlusBtns(5)
+        var buyNowMinus = () => minusPlusBtns(6)
+        var buyNowPlus = () => minusPlusBtns(7)
         
         document.addEventListener('keydown', (e) => {
-            const {code} = e;
+            var {code} = e;
             switch (code) {
                 case 'Space':
                     searchAndBuy()
@@ -488,7 +488,7 @@
                     dispatchClick(buyNowMinus())
                     break;
                 case 'ShiftRight':
-                    const navigateBackButton = () => document.querySelector('.ut-navigation-button-control')
+                    var navigateBackButton = () => document.querySelector('.ut-navigation-button-control')
                     dispatchClick(navigateBackButton())
                     break;
                 default:
