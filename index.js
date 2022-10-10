@@ -17,6 +17,7 @@ pr.style.opacity = '0.8'
 *
 */
 
+// CONFIGURATION
 const HOW_MANY_REQUEST_PER_ROUND = 25
 const HOW_MANY_ROUNDS_PER_CYCLE = 5
 const MIN_WAIT_PER_ROUND = 15000
@@ -42,6 +43,36 @@ const ELEMENT_SELECTOR = {
     }
 }
 
+const SEARCH_ITEM_RESPONSES = {
+    OK: 'OK',
+    KO: 'KO',
+    TIMEOUT: 'DOWN'
+}
+
+// UTILS
+const dispatchClick = (node) => {
+    triggerMouseEvent (node, 'mouseover');
+    triggerMouseEvent (node, 'mousedown');
+    triggerMouseEvent (node, 'mouseup');
+    triggerMouseEvent (node, 'click')
+}
+const triggerMouseEvent = async (node, eventType) => {
+    try {
+        var clickEvent = document.createEvent ('MouseEvents');
+        clickEvent.initEvent (eventType, true, true);
+        node.dispatchEvent (clickEvent);
+    } catch (e) {
+        
+    }
+}
+function sleep(ms) {
+    // add ms millisecond timeout before promise resolution
+    setClock(ms)
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+const getRandomSleep = (max, min) => {
+    return Math.floor(Math.random() * (max - min + 1) + min)
+}
 const getPlayerInfo = (element) => {
     const prizes = element.querySelectorAll(ELEMENT_SELECTOR.PLAYER.SELECTED_ITEM_LIST.PRIZE)
     const buyNowPrize = prizes[prizes.length - 1]
@@ -49,29 +80,43 @@ const getPlayerInfo = (element) => {
 
     return {buyNowPrize, name}
 }
-
-const getPlayerInfoElement = ({buyNowPrize, name, image}) => {
+const getPlayerInfoElement = ({buyNowPrize, name, status}) => {
     const newElement = document.createElement('div');
     newElement.style.display = 'flex';
     newElement.style.justifyContent = 'center'
     newElement.style.alignItems = 'center'
     newElement.style.fontSize = '18px'
-    const leftContainer = document.createElement('div')
-    leftContainer.appendChild(image)
-    newElement.appendChild(leftContainer)
+    newElement.style.color = '#333'
+    newElement.style.borderColor = status === 'OK' ? '#BADA55' : 'red'
+    newElement.style.borderWidth = '2px'
+    newElement.style.borderStyle = 'solid'
+
     const rightContainer = document.createElement('div')
-    rightContainer.style.flexGrow = 1
+    rightContainer.display = 'flex'
     rightContainer.appendChild(name)
     rightContainer.appendChild(buyNowPrize)
     newElement.appendChild(rightContainer)
 
     return newElement
 }
+const navigateBackButton = () => document.querySelector('.ut-navigation-button-control')
 
+// INIT CONFIG
 let buyAttempts = 0
 let boughtPlayers = 0
+let intervals = []
+var intervalAceptar = null
+var intervalItemClick = null
+var intervalErrorNotification = null
+var imageIntervals = []
 
-let intervals = [];
+// RESET INTERVALS
+const resetIntervals =  () => {
+    intervals.forEach(intervalID => {
+        clearInterval(intervalID)
+    })
+}
+
 var clock = document.createElement('div');
 clock.style.backgroundColor = 'white'
 clock.style.color = 'black'
@@ -118,34 +163,6 @@ const setClock = (miliseconds) => {
         }
     }, 100)
 }
-
-const dispatchClick = (node) => {
-    triggerMouseEvent (node, 'mouseover');
-    triggerMouseEvent (node, 'mousedown');
-    triggerMouseEvent (node, 'mouseup');
-    triggerMouseEvent (node, 'click')
-}
-
-const triggerMouseEvent = async (node, eventType) => {
-    try {
-        var clickEvent = document.createEvent ('MouseEvents');
-        clickEvent.initEvent (eventType, true, true);
-        node.dispatchEvent (clickEvent);
-    } catch (e) {
-        
-    }
-}
-
-function sleep(ms) {
-    // add ms millisecond timeout before promise resolution
-    setClock(ms)
-    return new Promise(resolve => setTimeout(resolve, ms))
-}
-
-var intervalAceptar = null
-var intervalItemClick = null
-var intervalErrorNotification = null
-var imageIntervals = []
 const imageReady = () => {
     return new Promise(resolve => {
         imageIntervals = [...imageIntervals, setInterval(() => {
@@ -167,12 +184,12 @@ const buyIt = () => {
     stats.innerText = `Comprados ${boughtPlayers} de ${buyAttempts}`
 
     return new Promise(async (resolve) => {
-        const { item } = await imageReady()
-        setMessage('Se cargó la imagen')
-        imageIntervals.forEach(interval => {
-            clearInterval(interval)
-        })
-        if(item && item.querySelector(CHEM_STYLES.NORMAL)) {
+        // const { item } = await imageReady()
+        // setMessage('Se cargó la imagen')
+        // imageIntervals.forEach(interval => {
+        //     clearInterval(interval)
+        // })
+        if(false && item && item.querySelector(CHEM_STYLES.NORMAL)) {
             resolve({response: 'BUY_KO'})
             setMessage('El artículo no tiene estilo de química')
         } else {
@@ -190,10 +207,12 @@ const buyIt = () => {
                             if(sellButton) {
                                 boughtPlayers++
                                 stats.innerText = `Comprados ${boughtPlayers} de ${buyAttempts}`
+                                const selectedPlayerInfo = getPlayerInfo(document.querySelector(ELEMENT_SELECTOR.PLAYER.SELECTED_ITEM_LIST.MAIN))
+                                const selectedPlayerInfoElement = getPlayerInfoElement({...selectedPlayerInfo, status: 'OK'})
+                                pr.appendChild(selectedPlayerInfoElement)
                                 resolve({response: 'BUY_OK'})
                             }
                         } catch(e) {
-                            brakeIt()
                         }
                     }
                 }
@@ -208,7 +227,6 @@ const buyIt = () => {
                         if(intervalItemClick) clearInterval(intervalItemClick)
                         dispatchClick(buyButton)
                     } catch (e) {
-                        brakeIt()
                     }
                 }
             }, 50)
@@ -224,9 +242,11 @@ const buyIt = () => {
                             if(intervalAceptar) clearInterval(intervalAceptar)
                             if(intervalItemClick) clearInterval(intervalItemClick)
                             dispatchClick(close)
+                            const selectedPlayerInfo = getPlayerInfo(document.querySelector(ELEMENT_SELECTOR.PLAYER.SELECTED_ITEM_LIST.MAIN))
+                            const selectedPlayerInfoElement = getPlayerInfoElement({...selectedPlayerInfo, status: 'KO'})
+                            pr.appendChild(selectedPlayerInfoElement)
                             resolve({response: 'BUY_KO'})
                         } catch (e) {
-                            brakeIt()
                         }
                     }
                 }
@@ -243,7 +263,12 @@ var getResults = () => {
     let resultsAlready = false
     let noResultsAlready = false
     return new Promise(resolve => {
-        intervalAtLeastOneItem = setInterval(() => {
+        setTimeout(() => {
+            if(!resultsAlready && !noResultsAlready) {
+                resolve({response: SEARCH_ITEM_RESPONSES.TIMEOUT})
+            }
+        }, 2000)
+        intervals = [...intervals, setInterval(() => {
             const results = document.querySelectorAll('.listFUTItem')
             if(results && results.length > 0 && !resultsAlready) {
                 resultsAlready = true
@@ -253,26 +278,21 @@ var getResults = () => {
                     dispatchClick(clickableItem)
                     clearInterval(intervalAtLeastOneItem)
                     resultsAlready = true
-                    const selectedPlayerInfo = getPlayerInfo(document.querySelector(ELEMENT_SELECTOR.PLAYER.SELECTED_ITEM_LIST.MAIN))
-                    const selectedPlayerInfoElement = getPlayerInfoElement(selectedPlayerInfo)
-                    pr.appendChild(selectedPlayerInfoElement)
-                    resolve({response: 'CLICKED_RESULT'})
+                    resolve({response: SEARCH_ITEM_RESPONSES.OK})
                 } catch(e) {
-                    brakeIt()
+                    resetIntervals()
                 }
             }
-        }, 100)
-        intervals = [...intervals, intervalAtLeastOneItem]
+        }, 50)]
 
-        intervalNoResults = setInterval(() => {
+        intervals = [...intervals, setInterval(() => {
             const noResults = document.querySelector('.ut-no-results-view')
             if(noResults && !noResultsAlready) {
                 clearInterval(intervalNoResults)
                 noResultsAlready = true
-                resolve({response: 'NO_RESULTS'})
+                resolve({response: SEARCH_ITEM_RESPONSES.KO})
             }
-        }, 100)
-        intervals = [...intervals, intervalNoResults]
+        }, 50)]
     })
 }
 
@@ -300,7 +320,30 @@ const updateRequestsClock = () => {
     roundClock.innerText = HOW_MANY_REQUEST_PER_ROUND - request
     request ++
 }
+
+const buyHandler = async () => {
+    const buyResponse = await buyIt()
+        if(buyResponse.response === 'BUY_OK') {
+            const buttonGroup = document.querySelector('.DetailPanel>.ut-button-group')
+            const sendToPile = buttonGroup.querySelectorAll('button')[7]
+            dispatchClick(sendToPile)
+            await sleep(200)
+            dispatchClick(navigateBackButton())
+            search()
+        } else if(buyResponse.response === 'BUY_KO') {
+            const close = document.querySelector('.icon_close')
+            if(close) {
+                dispatchClick(close)
+            }
+            await sleep(500)
+            dispatchClick(navigateBackButton())
+            search()
+        }
+}
+
 var search = async() => {
+    if(!running) return
+    // SEARCH CONTROLS
     const minusPlusBtns = (index) => document.querySelectorAll('.btn-standard')[index]
     const minBidMinus = () => minusPlusBtns(0)
     const minBidPlus = () => minusPlusBtns(1)
@@ -308,36 +351,32 @@ var search = async() => {
     const buyNowMinPlus = () => minusPlusBtns(5)
     const buyNowMinus = () => minusPlusBtns(6)
     const buyNowPlus = () => minusPlusBtns(7)
-
     const inputs = (index) => document.querySelectorAll('.ut-number-input-control')[index]
     const minBidInput = () => inputs(0)
     const minBuyInput = () => inputs(2)
     const maxBuyInput = () => inputs(3)
-
     const searchButton = () => document.querySelector('.btn-standard.call-to-action')
-    const navigateBackButton = () => document.querySelector('.ut-navigation-button-control')
+
+    // RESET INTERVALS
     intervals.forEach(intervalID => {
         clearInterval(intervalID)
     })
     intervals = []
-    const getRandomSleep = (max, min) => {
-        return Math.floor(Math.random() * (max - min + 1) + min)
-    }
-    if(!running) {
-        return
-    }
+
+    // CHECK ROUNDS AND CALL ITSELF IF NEEDED
     if(request > HOW_MANY_REQUEST_PER_ROUND) {
         const time = getRandomSleep(MAX_WAIT_PER_ROUND, MIN_WAIT_PER_ROUND)
         await sleep(time);
         request = 0
         rounds ++
+        search()
+        return
     }
     // if(rounds >= HOW_MANY_ROUNDS_PER_CYCLE) {
     //     const howMuchTime = getRandomSleep(MAX_WAIT_PER_CYCLE, MIN_WAIT_PER_CYCLE)
     //     await sleep(howMuchTime)
     //     rounds = 0
     // }
-    await sleep(100)
     updateRequestsClock()
     
     if(minBidInput()?.value > MAX_MIN_BID) {
@@ -356,35 +395,21 @@ var search = async() => {
     dispatchClick(searchButton())
     await sleep(300)
     const {response} = await getResults()
-    setMessage('CLICKED_RESULT...')
-    if(response === 'CLICKED_RESULT') {
-        const buyResponse = await buyIt()
-        if(buyResponse.response === 'BUY_OK') {
-            setMessage('Artículo comprado!')
-            const buttonGroup = document.querySelector('.DetailPanel>.ut-button-group')
-            const sendToPile = buttonGroup.querySelectorAll('button')[7]
-            dispatchClick(sendToPile)
-            await sleep(200)
-            dispatchClick(navigateBackButton())
-            search()
-        } else if(buyResponse.response === 'BUY_KO') {
-            const close = document.querySelector('.icon_close')
-            if(close) {
-                dispatchClick(close)
-            }
-            setMessage('No ha sido posible comprar el artículo')
-            await sleep(500)
-            dispatchClick(navigateBackButton())
-            search()
-        }
-    } else if(response === 'NO_RESULTS') {
+    if(response === SEARCH_ITEM_RESPONSES.OK) {
+        setMessage('AT LEAST ONE RESULT')
+        buyHandler()
+    } else if(response === SEARCH_ITEM_RESPONSES.KO) {
         try {
-            setMessage('No hemos encontrado nada en el mercado')
             dispatchClick(navigateBackButton())
-            
             search()
         } catch(e) {
-            brakeIt()
+            // Do nothing
+        }
+    } else if (response === SEARCH_ITEM_RESPONSES.TIMEOUT) {
+        try {
+            dispatchClick(navigateBackButton())
+        } catch(e) {
+            // Do nothing
         }
     }
 }
@@ -516,7 +541,6 @@ document.addEventListener('keydown', (e) => {
             dispatchClick(buyNowMinus())
             break;
         case 'ShiftRight':
-            const navigateBackButton = () => document.querySelector('.ut-navigation-button-control')
             dispatchClick(navigateBackButton())
             break;
         default:
