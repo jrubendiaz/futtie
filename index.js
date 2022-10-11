@@ -18,13 +18,13 @@ pr.style.opacity = '0.8'
 */
 
 // CONFIGURATION
-const HOW_MANY_REQUEST_PER_ROUND = 25
+const HOW_MANY_REQUEST_PER_ROUND = 35
 const HOW_MANY_ROUNDS_PER_CYCLE = 5
 const MIN_WAIT_PER_ROUND = 15000
 const MAX_WAIT_PER_ROUND = 30000
 const MIN_WAIT_PER_CYCLE = 60000
 const MAX_WAIT_PER_CYCLE = 120000
-const MAX_MIN_BID = 600
+const MAX_MIN_BID = 500
 
 const CHEM_STYLES = {
     NORMAL: '.playStyle.chemstyle250'
@@ -372,11 +372,13 @@ var search = async() => {
         search()
         return
     }
-    // if(rounds >= HOW_MANY_ROUNDS_PER_CYCLE) {
-    //     const howMuchTime = getRandomSleep(MAX_WAIT_PER_CYCLE, MIN_WAIT_PER_CYCLE)
-    //     await sleep(howMuchTime)
-    //     rounds = 0
-    // }
+    if(rounds >= HOW_MANY_ROUNDS_PER_CYCLE) {
+        const howMuchTime = getRandomSleep(MAX_WAIT_PER_CYCLE, MIN_WAIT_PER_CYCLE)
+        await sleep(howMuchTime)
+        rounds = 0
+        search()
+        return
+    }
     updateRequestsClock()
     
     if(minBidInput()?.value > MAX_MIN_BID) {
