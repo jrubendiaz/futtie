@@ -115,6 +115,7 @@ const resetIntervals =  () => {
     intervals.forEach(intervalID => {
         clearInterval(intervalID)
     })
+    intervals = []
 }
 
 var clock = document.createElement('div');
@@ -326,6 +327,7 @@ const buyHandler = async () => {
         if(buyResponse.response === 'BUY_OK') {
             const buttonGroup = document.querySelector('.DetailPanel>.ut-button-group')
             const sendToPile = buttonGroup.querySelectorAll('button')[7]
+            resetIntervals()
             dispatchClick(sendToPile)
             await sleep(200)
             dispatchClick(navigateBackButton())
@@ -335,7 +337,8 @@ const buyHandler = async () => {
             if(close) {
                 dispatchClick(close)
             }
-            await sleep(500)
+            resetIntervals()
+            await sleep(200)
             dispatchClick(navigateBackButton())
             search()
         }
@@ -356,12 +359,6 @@ var search = async() => {
     const minBuyInput = () => inputs(2)
     const maxBuyInput = () => inputs(3)
     const searchButton = () => document.querySelector('.btn-standard.call-to-action')
-
-    // RESET INTERVALS
-    intervals.forEach(intervalID => {
-        clearInterval(intervalID)
-    })
-    intervals = []
 
     // CHECK ROUNDS AND CALL ITSELF IF NEEDED
     if(request > HOW_MANY_REQUEST_PER_ROUND) {
@@ -409,6 +406,7 @@ var search = async() => {
         }
     } else if (response === SEARCH_ITEM_RESPONSES.TIMEOUT) {
         try {
+            resetIntervals()
             dispatchClick(navigateBackButton())
         } catch(e) {
             // Do nothing
