@@ -217,7 +217,7 @@ const buyIt = () => {
                         }
                     }
                 }
-            }, 50)
+            }, 10)
             intervals = [...intervals, intervalAceptar]
             intervalItemClick = setInterval(() => {
                 let buyButton = document.querySelector('.buyButton')
@@ -230,7 +230,7 @@ const buyIt = () => {
                     } catch (e) {
                     }
                 }
-            }, 50)
+            }, 10)
             intervals = [...intervals, intervalItemClick]
             intervalErrorNotification = setInterval(async () => {
                 const notification = document.querySelector('#NotificationLayer');
@@ -392,7 +392,7 @@ var search = async() => {
     await sleep(100)
     dispatchClick(request % 2 === 0 ? buyNowMinus() : buyNowPlus())
     dispatchClick(searchButton())
-    await sleep(300)
+    await sleep(250)
     const {response} = await getResults()
     if(response === SEARCH_ITEM_RESPONSES.OK) {
         setMessage('AT LEAST ONE RESULT')
