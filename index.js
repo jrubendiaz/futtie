@@ -217,7 +217,7 @@ const buyIt = () => {
                         }
                     }
                 }
-            }, 10)
+            }, 5)
             intervals = [...intervals, intervalAceptar]
             intervalItemClick = setInterval(() => {
                 let buyButton = document.querySelector('.buyButton')
@@ -230,7 +230,7 @@ const buyIt = () => {
                     } catch (e) {
                     }
                 }
-            }, 10)
+            }, 5)
             intervals = [...intervals, intervalItemClick]
             intervalErrorNotification = setInterval(async () => {
                 const notification = document.querySelector('#NotificationLayer');
@@ -251,7 +251,7 @@ const buyIt = () => {
                         }
                     }
                 }
-            }, 50)
+            }, 5)
             intervals = [...intervals, intervalErrorNotification]
         } 
     })
